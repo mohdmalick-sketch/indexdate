@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surprise for Dilara!</title>
+    <style>
+        body {
+            background-color: #ffe4e1;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #4a4a4a;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        h1 {
+            color: #d32f2f;
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        p.subtitle {
+            font-style: italic;
+            color: #777;
+            margin-bottom: 25px;
+        }
+
+        .question-block {
+            display: none; 
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .question-block.active {
+            display: block;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .btn-col {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .grid-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        button {
+            padding: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            border: 2px solid #ffb6c1;
+            background-color: #fff0f5;
+            color: #333;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background-color: #ffb6c1;
+            color: white;
+        }
+
+        button.selected {
+            background-color: #ff69b4;
+            color: white;
+            border-color: #ff69b4;
+        }
+
+        .back-btn {
+            background-color: #f1f1f1;
+            border-color: #ddd;
+            color: #666;
+            margin-top: 20px;
+            padding: 10px;
+            font-size: 14px;
+        }
+        
+        .back-btn:hover {
+            background-color: #ddd;
+            color: #333;
+        }
+
+        .floating-popup {
+            position: fixed;
+            pointer-events: none;
+            font-size: 30px;
+            font-weight: bold;
+            color: #d32f2f;
+            z-index: 1000;
+            animation: floatUp 1.2s ease-out forwards;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -60px) scale(1.2); }
+        }
+
+        .submit-btn {
+            background-color: #d32f2f;
+            color: white;
+            border: none;
+            margin-top: 30px;
+            width: 100%;
+            font-size: 1.2rem;
+            display: none;
+        }
+
+        .submit-btn:hover {
+            background-color: #b71c1c;
+        }
+
+        .part2-header {
+            color: #d32f2f;
+            font-size: 1.6rem;
+            margin: 40px 0 20px 0;
+            border-bottom: 2px dashed #ffb6c1;
+            padding-bottom: 10px;
+        }
+
+        .survey-item {
+            margin-bottom: 30px;
+            text-align: left;
+            background: #fffafa;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #ffe4e1;
+        }
+        
+        .survey-item h3 {
+            margin: 0 0 5px 0;
+            color: #333;
+            font-size: 1.2rem;
+        }
+        
+        .survey-item p {
+            margin: 0 0 15px 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container" id="mainContainer">
+        
+        <!-- Part 1: The Strict Quiz -->
+        <div id="part1">
+            <h1>Hey babe, my Dilara ❤️💞, Will you go on a date with me ?🥺🥹🥺🥹 </h1>
+            <p class="subtitle">then you have to answer these questions as follows</p>
+
+            <div class="question-block active" id="q1">
+                <h2>Question Nr. 1<br>Do you love me ?</h2>
+                <div class="btn-col">
+                    <button onclick="handleQ1(event, 'yes')">Yes</button>
+                    <button onclick="handleQ1(event, 'no')">No</button>
+                </div>
+            </div>
+
+            <div class="question-block" id="q2">
+                <h2>Question Nr. 2<br>okay another chance, Do you love me ?</h2>
+                <div class="btn-col">
+                    <button onclick="handleQ2(event, false)">YES</button>
+                    <button onclick="handleQ2(event, true)">NO</button>
+                    <button class="back-btn" onclick="goBack(1)">⬅️ Back</button>
+                </div>
+            </div>
+
+            <div class="question-block" id="q3">
+                <h2>Question Nr. 3<br>Do you really love me ?</h2>
+                <div class="btn-col">
+                    <button onclick="handleGeneric(event, 3, true, 'smart choice 😘')">Yes</button>
+                    <button onclick="handleGeneric(event, 3, false, '')">No</button>
+                    <button class="back-btn" onclick="goBack(2)">⬅️ Back</button>
+                </div>
+            </div>
+
+            <div class="question-block" id="q4">
+                <h2>Question Nr. 4<br>How much ?</h2>
+                <div class="btn-col">
+                    <button onclick="handleGeneric(event, 4, false, '')">3 kg</button>
+                    <button onclick="handleGeneric(event, 4, false, '')">69 :) 👻</button>
+                    <button onclick="handleGeneric(event, 4, false, '')">a lot</button>
+                    <button onclick="handleGeneric(event, 4, false, '')">I cannot live with you</button>
+                    <button onclick="handleGeneric(event, 4, true, '')">I cannot live without you 🥹</button>
+                    <button class="back-btn" onclick="goBack(3)">⬅️ Back</button>
+                </div>
+            </div>
+
+            <div class="question-block" id="q5">
+                <h2>Question Nr. 5<br>What is our special date ?</h2>
+                <div class="btn-col">
+                    <button onclick="handleGeneric(event, 5, false, '')">09.Sept</button>
+                    <button onclick="handleGeneric(event, 5, false, '')">New years day</button>
+                    <button onclick="handleGeneric(event, 5, false, '')">F*** this really 🙄🥺😐🤨💩🙊🙈😾😹😻😼😽🙀</button>
+                    <button onclick="handleGeneric(event, 5, false, '')">31. Aug</button>
+                    <button onclick="handleGeneric(event, 5, true, '')">14.Okt 😍</button>
+                    <button class="back-btn" onclick="goBack(4)">⬅️ Back</button>
+                </div>
+            </div>
+
+            <div class="question-block" id="q6">
+                <h2>Question Nr. 6<br>What is my fav Colour ?</h2>
+                <div class="btn-col">
+                    <button onclick="handleGeneric(event, 6, false, '')">black</button>
+                    <button onclick="handleGeneric(event, 6, false, '')">white</button>
+                    <button onclick="handleGeneric(event, 6, false, '')">brown</button>
+                    <button onclick="handleGeneric(event, 6, false, '')">turkish brown 😹</button>
+                    <button onclick="handleGeneric(event, 6, false, '')">Indian brown</button>
+                    <button onclick="handleGeneric(event, 6, true, '')">Dilara brown 😆</button>
+                    <button class="back-btn" onclick="goBack(5)">⬅️ Back</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Part 2: The Preferences -->
+        <div id="part2" style="display: none;">
+            <h2 class="part2-header">okay lets take it easy from here, Phewww 😮‍💨</h2>
+            <p class="subtitle"> FOCUSSSSSSSSSSS.</p>
+
+            <div class="survey-item">
+                <h3>The Penalty Box</h3>
+                <p>What happens if I am 5 minutes late? Please be gentle with my sentence:</p>
+                <div class="grid-options">
+                    <button onclick="selectOption(this)">You owe me an extra hug 🫂</button>
+                    <button onclick="selectOption(this)">I will be angry whole day and start saying NOOOOO</button>
+                    <button onclick="selectOption(this)">Dare you come late 🍴🪛</button>
+                    <button onclick="selectOption(this)">Forgiven if you bring Hug me warm 🍫</button>
+                </div>
+            </div>
+
+            <div class="survey-item">
+                <h3>The Caffeine Fuel</h3>
+                <p>What is fueling our pre-game energy?</p>
+                <div class="grid-options">
+                    <button onclick="selectOption(this)">Fancy Iced Coffee</button>
+                    <button onclick="selectOption(this)">Aggressively sweet Kisses 😘</button>
+                    <button onclick="selectOption(this)">A single Red Bull Energy ⚡</button>
+                    <button onclick="selectOption(this)">Pure emotional excitement ✨</button>
+                </div>
+            </div>
+
+            <div class="survey-item">
+                <h3>The Danger Zone</h3>
+                <p>If I try to steal a bite of your food... Please choose your reaction level carefully:</p>
+                <div class="grid-options">
+                    <button onclick="selectOption(this)">I will allow it (Once) 🤨</button>
+                    <button onclick="selectOption(this)">Literal fork to the hand 🍴</button>
+                    <button onclick="selectOption(this)">Only if I get half of yours 🔄</button>
+                    <button onclick="selectOption(this)">I will feed you till you finish it</button>
+                </div>
+            </div>
+
+            <div class="survey-item">
+                <h3>The Sweet Tooth</h3>
+                <p>Room for dessert? There is always a separate stomach for sweet things:</p>
+                <div class="grid-options">
+                    <button onclick="selectOption(this)">Ice cream scoop date 🍦</button>
+                    <button onclick="selectOption(this)">Split a Choco cake 🍫</button>
+                    <button onclick="selectOption(this)">Late night Walk craving</button>
+                    <button onclick="selectOption(this)">A sweet little kiss (Free) 💋</button>
+                </div>
+            </div>
+
+            <div class="survey-item">
+                <h3>The Exit Strategy</h3>
+                <p>How does the date officially end? Select the perfect conclusion:</p>
+                <div class="grid-options">
+                    <button onclick="selectOption(this)">Netflix and chill 🎬</button>
+                    <button onclick="selectOption(this)">Deep talks around a river</button>
+                    <button onclick="selectOption(this)">Your place</button>
+                    <button onclick="selectOption(this)">My place</button>
+                </div>
+            </div>
+
+            <div class="survey-item">
+                <h3>The Fit Check</h3>
+                <p>Are we coordinating outfits? Let's make sure we look like a team:</p>
+                <div class="grid-options">
+                    <button onclick="selectOption(this)">Complete surprise</button>
+                    <button onclick="selectOption(this)">Just UWs (hehe)</button>
+                    <button onclick="selectOption(this)">You black I brown</button>
+                    <button onclick="selectOption(this)">We have our own free will 😊</button>
+                </div>
+            </div>
+
+            <div class="survey-item">
+                <h3>The Hype Meter</h3>
+                <p>Scale of 1 to 10, how excited are you? Be honest (there is only one right answer):</p>
+                <div class="grid-options">
+                    <button onclick="selectOption(this)">11/10 (Can't wait!) 🚀</button>
+                    <button onclick="selectOption(this)">100/10 (Counting hours) 📈</button>
+                    <button onclick="selectOption(this)">1000/10 (Already dressed) 👗</button>
+                    <button onclick="selectOption(this)">Infinity/10 (Duh) ♾️</button>
+                </div>
+            </div>
+
+            <button class="submit-btn" id="finishBtn" onclick="finishSurvey()">Submit my answers! ❤️</button>
+        </div>
+
+    </div>
+
+    <script>
+        function triggerPopup(text, event) {
+            const popup = document.createElement('div');
+            popup.className = 'floating-popup';
+            popup.innerText = text;
+            popup.style.left = event.clientX + 'px';
+            popup.style.top = event.clientY + 'px';
+            document.body.appendChild(popup);
+            setTimeout(() => { popup.remove(); }, 1200);
+        }
+
+        function nextQuestion(currentQ) {
+            setTimeout(() => {
+                document.getElementById('q' + currentQ).classList.remove('active');
+                if (currentQ < 6) {
+                    document.getElementById('q' + (currentQ + 1)).classList.add('active');
+                } else {
+                    document.getElementById('part1').style.display = 'none';
+                    document.getElementById('part2').style.display = 'block';
+                    document.getElementById('finishBtn').style.display = 'block';
+                }
+            }, 500); 
+        }
+
+        function goBack(targetQ) {
+            const blocks = document.querySelectorAll('.question-block');
+            for(let i = 0; i < blocks.length; i++) {
+                blocks[i].classList.remove('active');
+            }
+            document.getElementById('q' + targetQ).classList.add('active');
+        }
+
+        function handleQ1(event, answer) {
+            triggerPopup('LOL', event);
+            if(answer === 'no') {
+                nextQuestion(1);
+            }
+        }
+
+        function handleQ2(event, isCorrect) {
+            if(isCorrect) {
+                triggerPopup('What are you doing, FOCUS 🤨', event);
+                nextQuestion(2);
+            } else {
+                triggerPopup('HEHEHE', event);
+            }
+        }
+
+        function handleGeneric(event, qNum, isCorrect, customSuccessText) {
+            if(isCorrect) {
+                let successMessage = customSuccessText ? customSuccessText : '😘';
+                triggerPopup(successMessage, event);
+                nextQuestion(qNum);
+            } else {
+                triggerPopup('😾', event);
+            }
+        }
+
+        function selectOption(btn) {
+            const siblings = btn.parentElement.children;
+            for(let i=0; i<siblings.length; i++) {
+                siblings[i].classList.remove('selected');
+            }
+            btn.classList.add('selected');
+        }
+
+        function finishSurvey() {
+            let resultsText = "Hey! Here are my choices for our date! ❤️\n\n";
+            
+            const items = document.querySelectorAll('.survey-item');
+            items.forEach(item => {
+                const questionTitle = item.querySelector('h3').innerText;
+                const selectedBtn = item.querySelector('.selected');
+                const answer = selectedBtn ? selectedBtn.innerText : "I couldn't decide!";
+                resultsText += `*${questionTitle}*: ${answer}\n`;
+            });
+
+            const encodedText = encodeURIComponent(resultsText); 
+
+            document.getElementById('part2').innerHTML = `
+                <h2 class="part2-header">Date officially secured! 🎉</h2>
+                <p>I am so excited! Click the button below to open WhatsApp and send your choices to me.</p>
+                <a href="https://wa.me/?text=${encodedText}" 
+                   style="display: inline-block; padding: 15px 30px; background-color: #25D366; color: white; text-decoration: none; border-radius: 10px; font-weight: bold; font-size: 1.1rem; margin-top: 20px;">
+                   Send Answers via WhatsApp 📱
+                </a>
+            `;
+        }
+    </script>
+</body>
+</html>
